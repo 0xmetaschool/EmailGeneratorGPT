@@ -1,32 +1,27 @@
-'use client'
+// components/Header.js
+'use client';
 
-import Link from 'next/link'
+import Link from 'next/link';
 
-const Header = () => {
+export default function Header() {
   return (
-    <header className="border-b bg-white shadow-sm">
-      <div className="container mx-auto px-4">
-        <div className="flex h-16 items-center justify-between">
+    <header className="border-b border-gray-200">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
           <Link href="/" className="font-bold text-xl">
             Email Generator
           </Link>
           
-          <nav className="flex items-center space-x-4">
-            <Link 
-              href="/dashboard" 
-              className="px-4 py-2 hover:bg-gray-100 rounded-md transition-colors"
-            >
+          <nav className="flex items-center space-x-8">
+            <Link href="/dashboard" className="text-gray-600 hover:text-gray-900">
               Dashboard
             </Link>
-            <Link 
-              href="/templates" 
-              className="px-4 py-2 hover:bg-gray-100 rounded-md transition-colors"
-            >
+            <Link href="/templates" className="text-gray-600 hover:text-gray-900">
               Templates
             </Link>
             <Link 
-              href="/signin"
-              className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition-colors"
+              href="/auth/signin"
+              className="bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800"
             >
               Sign In
             </Link>
@@ -34,7 +29,5 @@ const Header = () => {
         </div>
       </div>
     </header>
-  )
+  );
 }
-
-export default Header

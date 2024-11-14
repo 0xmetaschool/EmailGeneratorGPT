@@ -1,21 +1,23 @@
-import { Inter } from 'next/font/google'
-import Header from '../components/Header'  // This path is correct for your structure
-import './globals.css'
+// app/layout.js
+import { AuthProvider } from '@/lib/context/AuthContext';
+import './globals.css';
+import { Inter } from 'next/font/google';
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
-  title: 'Email Generator',
-  description: 'AI-powered email generator',
-}
+  title: 'MagicMail - AI Email Generator',
+  description: 'Generate professional emails in seconds with AI',
+};
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Header />
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
       </body>
     </html>
-  )
+  );
 }
