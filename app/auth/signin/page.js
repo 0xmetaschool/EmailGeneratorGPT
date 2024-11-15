@@ -1,4 +1,4 @@
-// app/auth/signin/page.js 
+// app/auth/signin/page.js
 'use client';
 
 import { useState } from 'react';
@@ -34,14 +34,10 @@ export default function SignInPage() {
         throw new Error(data.error || 'Failed to sign in');
       }
 
-      // After successful login, force a router refresh and redirect
-      router.refresh(); // This refreshes the current route
-      router.push('/dashboard'); // This redirects to dashboard
-      router.refresh(); // Additional refresh to ensure new state is picked up
-
+      router.push('/dashboard');
     } catch (err) {
       console.error('Signin error:', err);
-      setError(err.message || 'Invalid email or password');
+      setError(err.message || 'Failed to sign in');
     } finally {
       setLoading(false);
     }
@@ -82,6 +78,7 @@ export default function SignInPage() {
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-black focus:border-black sm:text-sm"
+                placeholder="Enter your email"
               />
             </div>
 
@@ -97,6 +94,7 @@ export default function SignInPage() {
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-black focus:border-black sm:text-sm"
+                placeholder="Enter your password"
               />
             </div>
 
@@ -119,13 +117,15 @@ export default function SignInPage() {
               </div>
             </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black disabled:opacity-50"
-            >
-              {loading ? 'Signing in...' : 'Sign in'}
-            </button>
+            <div>
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black disabled:opacity-50"
+              >
+                {loading ? 'Signing in...' : 'Sign in'}
+              </button>
+            </div>
           </form>
         </div>
       </div>
@@ -147,14 +147,6 @@ export default function SignInPage() {
             <div className="bg-white/10 p-4 rounded-lg backdrop-blur-lg">
               <h4 className="font-semibold mb-2">Email History</h4>
               <p className="text-sm text-gray-300">View and reuse previous emails</p>
-            </div>
-            <div className="bg-white/10 p-4 rounded-lg backdrop-blur-lg">
-              <h4 className="font-semibold mb-2">Personalization</h4>
-              <p className="text-sm text-gray-300">Customize your email settings</p>
-            </div>
-            <div className="bg-white/10 p-4 rounded-lg backdrop-blur-lg">
-              <h4 className="font-semibold mb-2">Quick Access</h4>
-              <p className="text-sm text-gray-300">Generate emails faster than ever</p>
             </div>
           </div>
         </div>
