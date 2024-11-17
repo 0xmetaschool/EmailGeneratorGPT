@@ -1,58 +1,73 @@
-// app/api/auth/signup/route.js
 import { NextResponse } from 'next/server';
 import { connectDB } from '@/lib/db';
 import User from '@/models/User';
-import { hashPassword, createToken } from '@/lib/auth';
+import bcrypt from 'bcryptjs';
+import { createToken } from '@/lib/auth';
 
 export async function POST(request) {
   try {
-    const { email, password } = await request.json();
+    const body = await request.json();
+    const { email, password } = body;
 
-    // Connect to database
+    if (!email || !password) {
+      return NextResponse.json(
+        { error: 'Email and password are required' },
+        { status: 400 }
+      );
+    }
+
     await connectDB();
 
-    // Check if user exists
+    // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return NextResponse.json(
-        { error: 'Email already exists' },
+        { error: 'Email already registered' },
         { status: 400 }
       );
     }
 
     // Hash password
-    const hashedPassword = await hashPassword(password);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create user
+    // Create new user
     const user = await User.create({
       email,
       hashedPassword
     });
 
     // Create token
-    const token = await createToken({ userId: user._id });
+    const token = await createToken({
+      userId: user._id,
+      email: user.email
+    });
 
     // Create response
     const response = NextResponse.json(
-      { message: 'Account created successfully' },
+      { 
+        message: 'User created successfully',
+        user: {
+          id: user._id,
+          email: user.email
+        }
+      },
       { status: 201 }
     );
 
-    // Set auth cookie
+    // Set cookie
     response.cookies.set('auth-token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 60 * 60 * 24 // 24 hours
+      maxAge: 60 * 60 * 24 * 7 // 7 days
     });
 
     return response;
-
   } catch (error) {
     console.error('Signup error:', error);
     return NextResponse.json(
-      { error: 'Something went wrong' },
+      { error: 'Failed to create account' },
       { status: 500 }
     );
   }
-}y
+}

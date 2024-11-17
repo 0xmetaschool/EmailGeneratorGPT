@@ -3,32 +3,72 @@
 @tailwind utilities;
 
 @layer utilities {
-  .animate-draw {
-    animation: draw 3s ease-in-out infinite;
+  .animation-delay-2000 {
+    animation-delay: 2s;
   }
-
-  .animate-dash {
-    stroke-dasharray: 10;
-    animation: dash 3s linear infinite;
+  
+  .animate-gradient {
+    background-size: 200% auto;
+    animation: shine 8s linear infinite;
+  }
+  
+  .animate-blob {
+    animation: blob 7s infinite;
   }
 }
 
-@keyframes draw {
-  0% {
-    stroke-dasharray: 1000;
-    stroke-dashoffset: 1000;
+@keyframes shine {
+  to {
+    background-position: 200% center;
   }
-  50% {
-    stroke-dashoffset: 0;
+}
+
+@keyframes blob {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
   }
   100% {
-    stroke-dasharray: 1000;
-    stroke-dashoffset: -1000;
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+@layer utilities {
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+  
+  .animate-gradient {
+    background-size: 200% auto;
+    animation: shine 8s linear infinite;
+  }
+  
+  .animate-blob {
+    animation: blob 7s infinite;
   }
 }
 
-@keyframes dash {
+@keyframes shine {
   to {
-    stroke-dashoffset: -100;
+    background-position: 200% center;
+  }
+}
+
+@keyframes blob {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
   }
 }

@@ -1,9 +1,8 @@
-// app/auth/signup/page.js
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -18,127 +17,137 @@ export default function SignUpPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    setLoading(true);
+
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
 
     try {
-      // Basic validation
-      if (formData.password !== formData.confirmPassword) {
-        setError('Passwords do not match');
-        setLoading(false);
-        return;
-      }
-
-      // Log request for debugging
-      console.log('Sending signup request:', {
-        email: formData.email,
-        password: formData.password
-      });
-
+      setLoading(true);
       const res = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           email: formData.email,
-          password: formData.password,
-          confirmPassword: formData.confirmPassword
-        }),
+          password: formData.password
+        })
       });
 
       const data = await res.json();
-      console.log('Signup response:', data);
 
       if (!res.ok) {
         throw new Error(data.error || 'Failed to create account');
       }
 
-      // If signup successful, redirect to dashboard
+      // Trigger auth state update
+      window.dispatchEvent(new Event('auth-change'));
+      
+      // Redirect to dashboard
       router.push('/dashboard');
     } catch (err) {
-      console.error('Signup error:', err);
-      setError(err.message || 'Something went wrong');
+      setError(err.message);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h1 className="text-4xl font-bold text-center">MagicMail</h1>
-          <h2 className="mt-6 text-3xl font-bold text-center">
-            Create your account
-          </h2>
-          <p className="mt-2 text-center text-gray-600">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-white">
+      <div className="w-full max-w-md px-4">
+        <div className="text-center mb-8">
+          <Link href="/" className="text-3xl font-bold mb-2">
+            MagicMail
+          </Link>
+          <h2 className="text-2xl font-bold mt-4 mb-2">Create your account</h2>
+          <p className="text-gray-600">
             Already have an account?{' '}
-            <Link href="/auth/signin" className="font-medium text-black hover:underline">
+            <Link href="/auth/signin" className="text-black font-semibold hover:underline">
               Sign in
             </Link>
           </p>
         </div>
 
         {error && (
-          <div className="bg-red-50 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+          <div className="mb-4 p-4 text-red-500 bg-red-50 rounded-lg text-center">
             {error}
           </div>
         )}
 
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
               Email address
             </label>
             <input
               id="email"
-              name="email"
               type="email"
               required
-              className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-black focus:border-black sm:text-sm"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              className="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
+              placeholder="Enter your email"
             />
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
               Password
             </label>
             <input
               id="password"
-              name="password"
               type="password"
               required
-              className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-black focus:border-black sm:text-sm"
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+              className="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
+              placeholder="Create a password"
             />
           </div>
 
           <div>
-            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
               Confirm Password
             </label>
             <input
               id="confirmPassword"
-              name="confirmPassword"
               type="password"
               required
-              className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-black focus:border-black sm:text-sm"
               value={formData.confirmPassword}
               onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+              className="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
+              placeholder="Confirm your password"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black disabled:opacity-50"
+            className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
           >
-            {loading ? 'Creating account...' : 'Create account'}
+            {loading ? (
+              <div className="flex items-center">
+                <div className="w-5 h-5 border-t-2 border-b-2 border-white rounded-full animate-spin mr-2"></div>
+                Creating account...
+              </div>
+            ) : (
+              'Create account'
+            )}
           </button>
         </form>
+
+        <p className="mt-6 text-center text-sm text-gray-500">
+          By signing up, you agree to our{' '}
+          <Link href="#" className="text-black font-medium hover:underline">
+            Terms of Service
+          </Link>{' '}
+          and{' '}
+          <Link href="#" className="text-black font-medium hover:underline">
+            Privacy Policy
+          </Link>
+        </p>
       </div>
     </div>
   );

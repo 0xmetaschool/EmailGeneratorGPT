@@ -1,22 +1,19 @@
-// app/layout.js
-import { AuthProvider } from '@/lib/context/AuthContext';
-import './globals.css';
 import { Inter } from 'next/font/google';
+import Header from '@/components/Header';
+import SiteFooter from '@/components/SiteFooter';
+import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
-
-export const metadata = {
-  title: 'MagicMail - AI Email Generator',
-  description: 'Generate professional emails in seconds with AI',
-};
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <AuthProvider>
+      <body className={`${inter.className} min-h-screen flex flex-col`}>
+        <Header />
+        <main className="flex-1">
           {children}
-        </AuthProvider>
+        </main>
+        <SiteFooter />
       </body>
     </html>
   );
