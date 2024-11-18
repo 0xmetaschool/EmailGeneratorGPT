@@ -1,9 +1,9 @@
-// app/auth/signin/page.js
 'use client';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { ArrowLeft } from 'lucide-react';
 
 export default function SignInPage() {
   const router = useRouter();
@@ -46,7 +46,18 @@ export default function SignInPage() {
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
       {/* Left side - Form */}
-      <div className="w-full md:w-1/2 flex items-center justify-center p-8 bg-white">
+      <div className="w-full md:w-1/2 flex flex-col items-center justify-center p-8 bg-white">
+        {/* Back Button */}
+        <div className="w-full max-w-md">
+          <button
+            onClick={() => router.push('/')}
+            className="inline-flex items-center text-gray-600 hover:text-gray-900 transition-colors mb-8"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to home
+          </button>
+        </div>
+
         <div className="max-w-md w-full space-y-8">
           <div className="text-center">
             <h1 className="text-4xl font-bold">MagicMail</h1>
@@ -130,23 +141,39 @@ export default function SignInPage() {
         </div>
       </div>
 
-      {/* Right side - Decorative */}
+      {/* Right side - Features */}
       <div className="hidden md:block w-1/2 bg-black p-8">
-        <div className="h-full flex flex-col items-center justify-center text-white space-y-8">
+        <div className="h-full flex flex-col items-center justify-center text-white space-y-12">
           <div className="text-center space-y-4">
-            <h3 className="text-3xl font-bold">Welcome back to MagicMail</h3>
-            <p className="text-lg text-gray-300 max-w-md">
+            <h3 className="text-4xl font-bold tracking-tight">Welcome back to MagicMail</h3>
+            <p className="text-lg text-gray-300 max-w-md font-light leading-relaxed">
               Sign in to access your AI-powered email assistant
             </p>
           </div>
-          <div className="grid grid-cols-2 gap-4 max-w-lg">
-            <div className="bg-white/10 p-4 rounded-lg backdrop-blur-lg">
-              <h4 className="font-semibold mb-2">Your Templates</h4>
-              <p className="text-sm text-gray-300">Access your saved email templates</p>
+          <div className="grid grid-cols-2 gap-6 max-w-2xl w-full">
+            <div className="bg-white/10 p-6 rounded-lg backdrop-blur-lg hover:bg-white/15 transition-colors duration-300">
+              <h4 className="font-semibold mb-3 text-lg tracking-wide">9 Unique Tones</h4>
+              <p className="text-sm text-gray-300 leading-relaxed">
+                From professional to friendly, craft your perfect email voice
+              </p>
             </div>
-            <div className="bg-white/10 p-4 rounded-lg backdrop-blur-lg">
-              <h4 className="font-semibold mb-2">Email History</h4>
-              <p className="text-sm text-gray-300">View and reuse previous emails</p>
+            <div className="bg-white/10 p-6 rounded-lg backdrop-blur-lg hover:bg-white/15 transition-colors duration-300">
+              <h4 className="font-semibold mb-3 text-lg tracking-wide">9 Email Types</h4>
+              <p className="text-sm text-gray-300 leading-relaxed">
+                Templates for every situation, from follow-ups to proposals
+              </p>
+            </div>
+            <div className="bg-white/10 p-6 rounded-lg backdrop-blur-lg hover:bg-white/15 transition-colors duration-300">
+              <h4 className="font-semibold mb-3 text-lg tracking-wide">Smart Length Control</h4>
+              <p className="text-sm text-gray-300 leading-relaxed">
+                Adjust email length to fit your needs - short, medium, or detailed
+              </p>
+            </div>
+            <div className="bg-white/10 p-6 rounded-lg backdrop-blur-lg hover:bg-white/15 transition-colors duration-300">
+              <h4 className="font-semibold mb-3 text-lg tracking-wide">Email History</h4>
+              <p className="text-sm text-gray-300 leading-relaxed">
+                Access and reuse your previous emails for consistent communication
+              </p>
             </div>
           </div>
         </div>

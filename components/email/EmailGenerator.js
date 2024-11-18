@@ -1,8 +1,8 @@
 'use client';
 import { useState } from 'react';
-import { Mail, Sparkles, Check, AlertCircle, History } from 'lucide-react';
+import { Mail, Sparkles, History, Save, ChevronRight, Book, Wand2, ArrowLeft } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
-// Constants
 const EMAIL_TYPES = [
   {
     id: 'business',
@@ -27,6 +27,36 @@ const EMAIL_TYPES = [
     label: 'Follow-up',
     icon: '🤝',
     description: 'Professional follow-up after meetings or events'
+  },
+  {
+    id: 'introduction',
+    label: 'Introduction',
+    icon: '👋',
+    description: 'First-time connections and networking emails'
+  },
+  {
+    id: 'support',
+    label: 'Customer Support',
+    icon: '🎮',
+    description: 'Help desk and customer service responses'
+  },
+  {
+    id: 'application',
+    label: 'Job Application',
+    icon: '📝',
+    description: 'Cover letters and job-related correspondence'
+  },
+  {
+    id: 'request',
+    label: 'Request/Proposal',
+    icon: '📊',
+    description: 'Formal requests and business proposals'
+  },
+  {
+    id: 'feedback',
+    label: 'Feedback & Review',
+    icon: '⭐',
+    description: 'Performance reviews and constructive feedback'
   }
 ];
 
@@ -50,6 +80,31 @@ const TONES = [
     id: 'formal',
     label: 'Formal',
     description: 'Highly professional and ceremonious'
+  },
+  {
+    id: 'enthusiastic',
+    label: 'Enthusiastic',
+    description: 'Energetic and positive'
+  },
+  {
+    id: 'empathetic',
+    label: 'Empathetic',
+    description: 'Understanding and compassionate'
+  },
+  {
+    id: 'assertive',
+    label: 'Assertive',
+    description: 'Confident and direct'
+  },
+  {
+    id: 'diplomatic',
+    label: 'Diplomatic',
+    description: 'Tactful and considerate'
+  },
+  {
+    id: 'persuasive',
+    label: 'Persuasive',
+    description: 'Compelling and influential'
   }
 ];
 
@@ -74,8 +129,9 @@ const WORD_COUNT_PRESETS = [
   { value: 300, label: 'Detailed (~300 words)' },
   { value: 500, label: 'Long (~500 words)' }
 ];
-// Main EmailGenerator Component
+
 export default function EmailGenerator() {
+  const router = useRouter();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     type: '',
@@ -87,7 +143,6 @@ export default function EmailGenerator() {
   const [generatedEmail, setGeneratedEmail] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState('');
-  const [saveSuccess, setSaveSuccess] = useState(false);
 
   const generateEmailContent = async (targetWordCount) => {
     try {
@@ -115,33 +170,12 @@ export default function EmailGenerator() {
         throw new Error('No content received from API');
       }
 
-      // Save to history
-      const historyItem = {
-        id: Date.now(),
-        type: formData.type,
-        tone: formData.tone,
-        prompt: formData.prompt,
-        content: data.content,
-        wordCount: data.wordCount,
-        timestamp: new Date().toISOString()
-      };
-
-      // Get existing history
-      const existingHistory = JSON.parse(localStorage.getItem('emailHistory') || '[]');
-      
-      // Add new email to history (limit to 50 items)
-      const updatedHistory = [historyItem, ...existingHistory].slice(0, 50);
-      
-      // Save updated history
-      localStorage.setItem('emailHistory', JSON.stringify(updatedHistory));
-
       return data;
     } catch (error) {
       console.error('Error generating email:', error);
       throw new Error('Failed to generate email. Please try again.');
     }
   };
-
   const handleGenerate = async () => {
     setIsGenerating(true);
     setError('');
@@ -164,8 +198,10 @@ export default function EmailGenerator() {
   };
 
   return (
-    <div className="w-full max-w-3xl mx-auto">
-      {/* Progress Bar */}
+    <div className="w-full max-w-7xl mx-auto">
+    
+
+      {/* Progress Indicator */}
       <div className="mb-8">
         <div className="flex justify-between mb-2">
           {['Type', 'Tone', 'Length', 'Content', 'Result'].map((label, index) => (
@@ -188,19 +224,11 @@ export default function EmailGenerator() {
         </div>
       </div>
 
-      {/* Success Message */}
-      {saveSuccess && (
-        <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg flex items-center gap-2">
-          <Check className="w-4 h-4" />
-          Email saved to history
-        </div>
-      )}
-
       {/* Step 1: Email Type */}
       {step === 1 && (
         <div className="space-y-6">
           <h2 className="text-xl font-semibold text-white">Select Email Type</h2>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-fr">
             {EMAIL_TYPES.map(type => (
               <button
                 key={type.id}
@@ -208,13 +236,13 @@ export default function EmailGenerator() {
                   setFormData({ ...formData, type: type.id });
                   setStep(2);
                 }}
-                className={`p-6 border rounded-xl text-left hover:border-blue-500 transition-colors ${
+                className={`p-6 border rounded-xl text-left hover:border-blue-500 transition-colors h-full flex flex-col ${
                   formData.type === type.id ? 'border-blue-500 bg-gray-800' : 'border-gray-700 bg-gray-800'
                 }`}
               >
                 <div className="text-2xl mb-2">{type.icon}</div>
                 <h3 className="font-medium text-white mb-1">{type.label}</h3>
-                <p className="text-sm text-gray-300">{type.description}</p>
+                <p className="text-sm text-white/80 flex-grow">{type.description}</p>
               </button>
             ))}
           </div>
@@ -233,7 +261,7 @@ export default function EmailGenerator() {
               Back
             </button>
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-fr">
             {TONES.map(tone => (
               <button
                 key={tone.id}
@@ -241,12 +269,12 @@ export default function EmailGenerator() {
                   setFormData({ ...formData, tone: tone.id });
                   setStep(3);
                 }}
-                className={`p-6 border rounded-xl text-left hover:border-blue-500 transition-colors ${
+                className={`p-6 border rounded-xl text-left hover:border-blue-500 transition-colors h-full flex flex-col ${
                   formData.tone === tone.id ? 'border-blue-500 bg-gray-800' : 'border-gray-700 bg-gray-800'
                 }`}
               >
                 <h3 className="font-medium text-white mb-1">{tone.label}</h3>
-                <p className="text-sm text-gray-300">{tone.description}</p>
+                <p className="text-sm text-white/80 flex-grow">{tone.description}</p>
               </button>
             ))}
           </div>
@@ -265,7 +293,7 @@ export default function EmailGenerator() {
               Back
             </button>
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {LENGTH_OPTIONS.map(option => (
               <button
                 key={option.id}
@@ -278,7 +306,7 @@ export default function EmailGenerator() {
               >
                 <div className="text-2xl mb-2">{option.icon}</div>
                 <h3 className="font-medium text-white mb-1">{option.label}</h3>
-                <p className="text-sm text-gray-300">{option.description}</p>
+                <p className="text-sm text-white/80">{option.description}</p>
               </button>
             ))}
           </div>
@@ -352,8 +380,7 @@ export default function EmailGenerator() {
               className="w-full h-40 p-4 bg-gray-700 border border-gray-600 text-white rounded-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder-gray-500"
             />
             {error && (
-              <div className="flex items-center gap-2 text-red-400 text-sm">
-                <AlertCircle className="w-4 h-4" />
+              <div className="text-red-400 text-sm">
                 {error}
               </div>
             )}

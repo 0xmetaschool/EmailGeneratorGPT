@@ -7,10 +7,16 @@ export default function HistoryPage() {
   const router = useRouter();
   const [history, setHistory] = useState([]);
 
+  // Load history from localStorage when component mounts
   useEffect(() => {
     const savedHistory = localStorage.getItem('emailHistory');
     if (savedHistory) {
-      setHistory(JSON.parse(savedHistory));
+      try {
+        setHistory(JSON.parse(savedHistory));
+      } catch (error) {
+        console.error('Error loading history:', error);
+        setHistory([]);
+      }
     }
   }, []);
 
@@ -20,8 +26,14 @@ export default function HistoryPage() {
     localStorage.setItem('emailHistory', JSON.stringify(newHistory));
   };
 
-  const handleCopy = (content) => {
-    navigator.clipboard.writeText(content);
+  const handleCopy = async (content) => {
+    await navigator.clipboard.writeText(content);
+    // Show toast notification
+    const toast = document.createElement('div');
+    toast.textContent = 'Copied to clipboard!';
+    toast.className = 'fixed bottom-4 right-4 bg-gray-800 text-white px-4 py-2 rounded-lg';
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 2000);
   };
 
   const formatDate = (dateString) => {
