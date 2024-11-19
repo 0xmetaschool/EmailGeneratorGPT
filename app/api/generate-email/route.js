@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
+import { connectDB } from '@/lib/db';
+import Email from '@/models/Email';
+import { verifyToken } from '@/lib/auth';
 
 // Initialize OpenAI
 const openai = new OpenAI({
@@ -8,6 +11,17 @@ const openai = new OpenAI({
 
 export async function POST(req) {
   try {
+    // Get and verify auth token
+    const token = req.cookies.get('auth-token')?.value;
+    if (!token) {
+      console.log('No auth token found');
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // Verify token and get user ID
+    const decoded = await verifyToken(token);
+    const userId = decoded.userId;
+
     const { type, tone, prompt, lengthOption, wordCount } = await req.json();
 
     // Validate required fields
@@ -45,25 +59,31 @@ export async function POST(req) {
     const generatedEmail = completion.choices[0].message.content;
     const wordCountEstimate = generatedEmail.split(/\s+/).length;
 
+    // Connect to database and save the email
+    await connectDB();
+
+    const email = await Email.create({
+      userId,
+      type,
+      tone,
+      prompt,
+      content: generatedEmail,
+      timestamp: new Date()
+    });
+
+    console.log('Email generated and saved:', { id: email._id });
+
     return NextResponse.json({
       content: generatedEmail,
       wordCount: wordCountEstimate,
-      targetWordCount: lengthOption === 'custom' ? wordCount : wordCountEstimate
+      targetWordCount: lengthOption === 'custom' ? wordCount : wordCountEstimate,
+      emailId: email._id
     });
 
   } catch (error) {
-    console.error('Email generation error:', error);
-    
-    // Check if it's an OpenAI API key error
-    if (error.message.includes('API key')) {
-      return NextResponse.json(
-        { error: 'OpenAI API key is not configured correctly' },
-        { status: 500 }
-      );
-    }
-
+    console.error('Error generating/saving email:', error);
     return NextResponse.json(
-      { error: 'Failed to generate email. Please try again.' },
+      { error: 'Failed to generate or save email', details: error.message },
       { status: 500 }
     );
   }

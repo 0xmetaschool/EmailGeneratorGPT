@@ -199,26 +199,30 @@ export default function EmailGenerator() {
 
   return (
     <div className="w-full max-w-7xl mx-auto">
-    
-
       {/* Progress Indicator */}
-      <div className="mb-8">
-        <div className="flex justify-between mb-2">
+      <div className="mb-12">
+        <div className="flex justify-between mb-4">
           {['Type', 'Tone', 'Length', 'Content', 'Result'].map((label, index) => (
             <div
               key={label}
-              className={`text-sm font-medium ${
-                step > index + 1 ? 'text-white' : 
-                step === index + 1 ? 'text-white' : 'text-gray-400'
+              className={`relative flex flex-col items-center ${
+                index < step - 1 ? 'text-white' : 
+                index === step - 1 ? 'text-white' : 'text-gray-500'
               }`}
             >
-              {label}
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center mb-2 border-2 transition-colors ${
+                index < step - 1 ? 'bg-white/20 border-white' : 
+                index === step - 1 ? 'bg-white/10 border-white' : 'bg-gray-800 border-gray-600'
+              }`}>
+                {index < step - 1 ? '✓' : index + 1}
+              </div>
+              <span className="text-sm font-medium">{label}</span>
             </div>
           ))}
         </div>
-        <div className="h-2 bg-gray-700 rounded-full">
+        <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
           <div
-            className="h-2 bg-blue-500 rounded-full transition-all duration-500"
+            className="h-full bg-white rounded-full transition-all duration-500 ease-out"
             style={{ width: `${(step / 5) * 100}%` }}
           />
         </div>
@@ -226,9 +230,9 @@ export default function EmailGenerator() {
 
       {/* Step 1: Email Type */}
       {step === 1 && (
-        <div className="space-y-6">
-          <h2 className="text-xl font-semibold text-white">Select Email Type</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-fr">
+        <div className="space-y-8 animate-fadeIn">
+          <h2 className="text-2xl font-semibold text-white">Select Email Type</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {EMAIL_TYPES.map(type => (
               <button
                 key={type.id}
@@ -236,13 +240,15 @@ export default function EmailGenerator() {
                   setFormData({ ...formData, type: type.id });
                   setStep(2);
                 }}
-                className={`p-6 border rounded-xl text-left hover:border-blue-500 transition-colors h-full flex flex-col ${
-                  formData.type === type.id ? 'border-blue-500 bg-gray-800' : 'border-gray-700 bg-gray-800'
+                className={`group p-6 rounded-xl backdrop-blur-lg transition-all duration-300 hover:-translate-y-1 ${
+                  formData.type === type.id 
+                    ? 'bg-white/20 border-2 border-white'
+                    : 'bg-white/5 border border-white/10 hover:border-white/50'
                 }`}
               >
-                <div className="text-2xl mb-2">{type.icon}</div>
-                <h3 className="font-medium text-white mb-1">{type.label}</h3>
-                <p className="text-sm text-white/80 flex-grow">{type.description}</p>
+                <div className="text-3xl mb-3 transform transition-transform group-hover:scale-110">{type.icon}</div>
+                <h3 className="font-medium text-white mb-2">{type.label}</h3>
+                <p className="text-sm text-white/70">{type.description}</p>
               </button>
             ))}
           </div>
@@ -251,17 +257,18 @@ export default function EmailGenerator() {
 
       {/* Step 2: Tone Selection */}
       {step === 2 && (
-        <div className="space-y-6">
+        <div className="space-y-8 animate-fadeIn">
           <div className="flex justify-between items-center">
-            <h2 className="text-xl font-semibold text-white">Select Tone</h2>
+            <h2 className="text-2xl font-semibold text-white">Select Tone</h2>
             <button
               onClick={() => setStep(1)}
-              className="text-sm text-gray-300 hover:text-white"
+              className="flex items-center gap-2 text-sm text-white/70 hover:text-white transition-colors"
             >
+              <ArrowLeft className="w-4 h-4" />
               Back
             </button>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-fr">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {TONES.map(tone => (
               <button
                 key={tone.id}
@@ -269,12 +276,14 @@ export default function EmailGenerator() {
                   setFormData({ ...formData, tone: tone.id });
                   setStep(3);
                 }}
-                className={`p-6 border rounded-xl text-left hover:border-blue-500 transition-colors h-full flex flex-col ${
-                  formData.tone === tone.id ? 'border-blue-500 bg-gray-800' : 'border-gray-700 bg-gray-800'
+                className={`group p-6 rounded-xl backdrop-blur-lg transition-all duration-300 hover:-translate-y-1 ${
+                  formData.tone === tone.id 
+                    ? 'bg-white/20 border-2 border-white'
+                    : 'bg-white/5 border border-white/10 hover:border-white/50'
                 }`}
               >
-                <h3 className="font-medium text-white mb-1">{tone.label}</h3>
-                <p className="text-sm text-white/80 flex-grow">{tone.description}</p>
+                <h3 className="font-medium text-white mb-2">{tone.label}</h3>
+                <p className="text-sm text-white/70">{tone.description}</p>
               </button>
             ))}
           </div>
@@ -283,50 +292,55 @@ export default function EmailGenerator() {
 
       {/* Step 3: Length Selection */}
       {step === 3 && (
-        <div className="space-y-6">
+        <div className="space-y-8 animate-fadeIn">
           <div className="flex justify-between items-center">
-            <h2 className="text-xl font-semibold text-white">Select Length</h2>
+            <h2 className="text-2xl font-semibold text-white">Select Length</h2>
             <button
               onClick={() => setStep(2)}
-              className="text-sm text-gray-300 hover:text-white"
+              className="flex items-center gap-2 text-sm text-white/70 hover:text-white transition-colors"
             >
+              <ArrowLeft className="w-4 h-4" />
               Back
             </button>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {LENGTH_OPTIONS.map(option => (
               <button
                 key={option.id}
                 onClick={() => {
                   setFormData({ ...formData, lengthOption: option.id });
                 }}
-                className={`p-6 border rounded-xl text-left hover:border-blue-500 transition-colors ${
-                  formData.lengthOption === option.id ? 'border-blue-500 bg-gray-800' : 'border-gray-700 bg-gray-800'
+                className={`group p-6 rounded-xl backdrop-blur-lg transition-all duration-300 hover:-translate-y-1 ${
+                  formData.lengthOption === option.id 
+                    ? 'bg-white/20 border-2 border-white'
+                    : 'bg-white/5 border border-white/10 hover:border-white/50'
                 }`}
               >
-                <div className="text-2xl mb-2">{option.icon}</div>
-                <h3 className="font-medium text-white mb-1">{option.label}</h3>
-                <p className="text-sm text-white/80">{option.description}</p>
+                <div className="text-3xl mb-3 transform transition-transform group-hover:scale-110">{option.icon}</div>
+                <h3 className="font-medium text-white mb-2">{option.label}</h3>
+                <p className="text-sm text-white/70">{option.description}</p>
               </button>
             ))}
           </div>
           
           {formData.lengthOption === 'custom' && (
-            <div className="space-y-4">
+            <div className="space-y-6 animate-fadeIn">
               <div className="grid grid-cols-2 gap-4">
                 {WORD_COUNT_PRESETS.map(preset => (
                   <button
                     key={preset.value}
                     onClick={() => setFormData({ ...formData, wordCount: preset.value })}
-                    className={`p-4 border rounded-lg text-left hover:border-blue-500 transition-colors ${
-                      formData.wordCount === preset.value ? 'border-blue-500 bg-gray-800' : 'border-gray-700 bg-gray-800'
+                    className={`p-4 rounded-xl transition-all duration-300 ${
+                      formData.wordCount === preset.value 
+                        ? 'bg-white/20 border-2 border-white'
+                        : 'bg-white/5 border border-white/10 hover:border-white/50'
                     }`}
                   >
                     <span className="text-white">{preset.label}</span>
                   </button>
                 ))}
               </div>
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <label className="block text-sm font-medium text-white">Custom Word Count</label>
                 <input
                   type="number"
@@ -337,16 +351,16 @@ export default function EmailGenerator() {
                     ...formData, 
                     wordCount: Math.min(1000, Math.max(50, parseInt(e.target.value) || 50))
                   })}
-                  className="w-full p-2 bg-gray-700 border border-gray-600 text-white rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  className="w-full p-3 bg-white/5 border border-white/10 text-white rounded-xl focus:border-white focus:ring-1 focus:ring-white transition-colors"
                 />
-                <p className="text-xs text-gray-400">Min: 50 words, Max: 1000 words</p>
+                <p className="text-xs text-white/50">Min: 50 words, Max: 1000 words</p>
               </div>
             </div>
           )}
 
           <button
             onClick={() => setStep(4)}
-            className="w-full py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors"
+            className="w-full py-4 bg-white/20 text-white rounded-xl hover:shadow-lg hover:shadow-white/20 transition-all duration-300 hover:-translate-y-1"
           >
             Continue
           </button>
@@ -355,18 +369,19 @@ export default function EmailGenerator() {
 
       {/* Step 4: Content Input */}
       {step === 4 && (
-        <div className="space-y-6">
+        <div className="space-y-8 animate-fadeIn">
           <div className="flex justify-between items-center">
-            <h2 className="text-xl font-semibold text-white">Describe Your Email</h2>
+            <h2 className="text-2xl font-semibold text-white">Describe Your Email</h2>
             <button
               onClick={() => setStep(3)}
-              className="text-sm text-gray-300 hover:text-white"
+              className="flex items-center gap-2 text-sm text-white/70 hover:text-white transition-colors"
             >
+              <ArrowLeft className="w-4 h-4" />
               Back
             </button>
           </div>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between text-sm text-gray-400">
+          <div className="space-y-6">
+            <div className="flex items-center justify-between text-sm text-white/50">
               <span>
                 {formData.lengthOption === 'custom' 
                   ? `Target length: ~${formData.wordCount} words`
@@ -377,22 +392,22 @@ export default function EmailGenerator() {
               value={formData.prompt}
               onChange={(e) => setFormData({ ...formData, prompt: e.target.value })}
               placeholder="Example: Write a follow-up email to thank the client for the meeting and confirm next steps..."
-              className="w-full h-40 p-4 bg-gray-700 border border-gray-600 text-white rounded-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder-gray-500"
+              className="w-full h-48 p-4 bg-white/5 border border-white/10 text-white rounded-xl focus:border-white focus:ring-1 focus:ring-white placeholder-white/30 transition-colors"
             />
             {error && (
-              <div className="text-red-400 text-sm">
+              <div className="text-red-400 text-sm bg-red-500/10 border border-red-500/20 rounded-lg p-3">
                 {error}
               </div>
             )}
             <button
               onClick={handleGenerate}
               disabled={!formData.prompt.trim() || isGenerating}
-              className="w-full py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 disabled:bg-gray-600 disabled:cursor-not-allowed transition-colors"
+              className="w-full py-4 bg-white/20 text-white rounded-xl hover:shadow-lg hover:shadow-white/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:-translate-y-1"
             >
               {isGenerating ? (
-                <div className="flex items-center justify-center gap-2">
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  Generating...
+                <div className="flex items-center justify-center gap-3">
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  Crafting Your Email...
                 </div>
               ) : (
                 'Generate Email'
@@ -404,11 +419,11 @@ export default function EmailGenerator() {
 
       {/* Step 5: Result */}
       {step === 5 && generatedEmail && (
-        <div className="space-y-6">
+        <div className="space-y-8 animate-fadeIn">
           <div className="flex justify-between items-center">
-            <h2 className="text-xl font-semibold text-white">Generated Email</h2>
+            <h2 className="text-2xl font-semibold text-white">Your Generated Email</h2>
             <div className="flex items-center gap-4">
-              <span className="text-sm text-gray-300">
+              <span className="text-sm text-white/50">
                 Word count: {generatedEmail.wordCount} 
                 {formData.lengthOption === 'custom' && 
                   ` / Target: ~${generatedEmail.targetWordCount}`
@@ -427,32 +442,35 @@ export default function EmailGenerator() {
                   setGeneratedEmail('');
                   setError('');
                 }}
-                className="text-sm text-gray-300 hover:text-white"
+                className="text-sm text-white/70 hover:text-white transition-colors"
               >
                 Start Over
               </button>
             </div>
           </div>
-          <div className="bg-gray-700 p-6 rounded-xl border border-gray-600">
-            <pre className="whitespace-pre-wrap font-sans text-white">{generatedEmail.content}</pre>
+          <div className="bg-white/5 border border-white/10 p-8 rounded-xl backdrop-blur-lg">
+            <pre className="whitespace-pre-wrap font-sans text-white/90 leading-relaxed">{generatedEmail.content}</pre>
           </div>
-          <div className="flex gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <button
               onClick={() => navigator.clipboard.writeText(generatedEmail.content)}
-              className="flex-1 py-3 bg-gray-800 text-white rounded-xl hover:bg-gray-700 transition-colors"
+              className="flex items-center justify-center gap-2 py-4 bg-white/5 text-white rounded-xl hover:bg-white/10 transition-all duration-300"
             >
+              <Save className="w-5 h-5" />
               Copy to Clipboard
             </button>
             <button
               onClick={handlePreviewEmail}
-              className="flex-1 py-3 bg-gray-800 text-white rounded-xl hover:bg-gray-700 transition-colors"
+              className="flex items-center justify-center gap-2 py-4 bg-white/5 text-white rounded-xl hover:bg-white/10 transition-all duration-300"
             >
+              <Mail className="w-5 h-5" />
               Open in Mail App
             </button>
             <button
               onClick={() => setStep(4)}
-              className="flex-1 py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors"
+              className="flex items-center justify-center gap-2 py-4 bg-white/20 text-white rounded-xl hover:shadow-lg hover:shadow-white/20 transition-all duration-300"
             >
+              <Sparkles className="w-5 h-5" />
               Regenerate
             </button>
           </div>

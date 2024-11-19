@@ -3,11 +3,13 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
+import { Menu } from 'lucide-react';
 
 export default function Header() {
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const checkAuth = async () => {
     try {
@@ -28,10 +30,7 @@ export default function Header() {
 
   useEffect(() => {
     checkAuth();
-
-    // Add event listener for storage changes
     window.addEventListener('auth-change', checkAuth);
-
     return () => {
       window.removeEventListener('auth-change', checkAuth);
     };
@@ -45,9 +44,7 @@ export default function Header() {
 
       if (res.ok) {
         setUser(null);
-        // Dispatch auth change event
         window.dispatchEvent(new Event('auth-change'));
-        // Redirect to signin page
         window.location.href = '/auth/signin';
       }
     } catch (error) {
@@ -56,46 +53,116 @@ export default function Header() {
   };
 
   return (
-    <header className="border-b border-gray-200 bg-white">
+    <header className="border-b border-white/10 bg-black/50 backdrop-blur-lg sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <Link href="/" className="font-bold text-xl group">
-            <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 bg-clip-text text-transparent font-extrabold tracking-tight hover:from-purple-600 hover:via-blue-600 hover:to-purple-600 transition-all duration-300">
-              Magic
+          {/* Logo */}
+          <Link href="/" className="font-bold text-xl group relative">
+            <span className="text-white group-hover:opacity-0 transition-opacity duration-300 absolute">
+              EmailGeneratorGPT
             </span>
-            <span className="text-gray-900">Mail</span>
+            <span className="text-transparent bg-gradient-to-r from-white via-white to-white bg-clip-text opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              EmailGeneratorGPT
+            </span>
           </Link>
           
-          <nav className="flex items-center space-x-8">
-            <Link href="/dashboard" className="text-gray-600 hover:text-gray-900">
-              Dashboard
-            </Link>
-            <Link href="/history" className="text-gray-600 hover:text-gray-900">
-              History
-            </Link>
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center space-x-8">
             {!loading && (
               <>
                 {user ? (
-                  <div className="flex items-center space-x-4">
-                    <span className="text-gray-600">{user.email}</span>
-                    <button 
-                      onClick={handleSignOut}
-                      className="bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800 transition-colors"
+                  <>
+                    <Link 
+                      href="/dashboard" 
+                      className="text-white/70 hover:text-white transition-all duration-300 hover:-translate-y-0.5"
                     >
-                      Sign Out
-                    </button>
-                  </div>
+                      Dashboard
+                    </Link>
+                    <Link 
+                      href="/history" 
+                      className="text-white/70 hover:text-white transition-all duration-300 hover:-translate-y-0.5"
+                    >
+                      History
+                    </Link>
+                    <div className="flex items-center space-x-4">
+                      <span className="text-white/70">{user.email}</span>
+                      <button 
+                        onClick={handleSignOut}
+                        className="bg-white text-black px-4 py-2 rounded-xl hover:shadow-lg hover:shadow-white/20 transition-all duration-300 hover:-translate-y-0.5 font-medium"
+                      >
+                        Sign Out
+                      </button>
+                    </div>
+                  </>
                 ) : (
-                  <Link 
-                    href="/auth/signin"
-                    className="bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800 transition-colors"
-                  >
-                    Sign In
-                  </Link>
+                  <div className="flex items-center space-x-6">
+                    <Link
+                      href="/auth/signup"
+                      className="bg-white text-black px-6 py-2.5 rounded-xl hover:shadow-lg hover:shadow-white/20 transition-all duration-300 hover:-translate-y-1 font-medium"
+                    >
+                      Get Started
+                    </Link>
+                  </div>
                 )}
               </>
             )}
           </nav>
+
+          {/* Mobile Menu Button */}
+          <button
+            className="md:hidden p-2 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-all duration-300"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            <Menu className="w-6 h-6" />
+          </button>
+        </div>
+
+        {/* Mobile Navigation */}
+        <div 
+          className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+            mobileMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+          }`}
+        >
+          {!loading && (
+            <div className="py-4 space-y-4">
+              {user ? (
+                <>
+                  <Link 
+                    href="/dashboard" 
+                    className="block px-4 py-2 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-300"
+                  >
+                    Dashboard
+                  </Link>
+                  <Link 
+                    href="/history" 
+                    className="block px-4 py-2 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-300"
+                  >
+                    History
+                  </Link>
+                  <div className="px-4 pt-4 border-t border-white/10">
+                    <div className="space-y-4">
+                      <div className="text-white/70">{user.email}</div>
+                      <button 
+                        onClick={handleSignOut}
+                        className="w-full bg-white text-black px-4 py-2 rounded-xl hover:shadow-lg hover:shadow-white/20 transition-all duration-300 font-medium"
+                      >
+                        Sign Out
+                      </button>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <div className="px-4 space-y-2">
+                  <Link
+                    href="/auth/signup"
+                    className="block w-full bg-white text-black px-4 py-2 rounded-xl hover:shadow-lg hover:shadow-white/20 transition-all duration-300 text-center font-medium"
+                  >
+                    Get Started
+                  </Link>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </header>

@@ -1,5 +1,6 @@
 // models/User.js
 import mongoose from 'mongoose';
+import { ensureCollection } from '@/lib/db';
 
 const UserSchema = new mongoose.Schema({
   email: {
@@ -24,6 +25,10 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   }
+}, {
+  timestamps: true,
+  // Collection name will be automatically generated if not provided
 });
 
-export default mongoose.models.User || mongoose.model('User', UserSchema);
+// Use ensureCollection instead of mongoose.model directly
+export default mongoose.models.User || ensureCollection('User', UserSchema);
