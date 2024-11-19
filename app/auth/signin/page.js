@@ -62,10 +62,10 @@ export default function SignInPage() {
           <div className="text-center">
             <h1 className="text-4xl font-bold">MagicMail</h1>
             <h2 className="mt-6 text-3xl font-bold">Welcome back</h2>
-            <p className="mt-2 text-sm text-gray-600">
-              Don't have an account yet?{' '}
-              <Link href="/auth/signup" className="font-medium text-black hover:text-gray-800">
-                Create an account
+            <p className="mt-2 text-sm text-gray-500">
+              Don&apos;t have an account?{' '}
+              <Link href="/auth/signup" className="text-blue-600 hover:underline">
+                Sign up
               </Link>
             </p>
           </div>

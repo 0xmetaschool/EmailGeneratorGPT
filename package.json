@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.0",
     "bcryptjs": "^2.4.3",
     "framer-motion": "^11.11.17",
     "jose": "^5.9.6",

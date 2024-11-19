@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
+import { Switch } from '@headlessui/react'
 
 const SettingsPage = () => {
   const [settings, setSettings] = useState({
@@ -113,7 +114,13 @@ const SettingsPage = () => {
               <div className="space-y-4">
                 {Object.entries(settings.notifications).map(([key, value]) => (
                   <div key={key} className="flex items-center justify-between">
-                    <span className="text-sm">{key.replace(/([A-Z])/g, ' $1').capitalize()}</span>
+                    <span className="text-sm">
+                      {key
+                        .replace(/([A-Z])/g, ' $1')
+                        .split(' ')
+                        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                        .join(' ')}
+                    </span>
                     <Switch
                       checked={value}
                       onChange={(checked) => setSettings({
