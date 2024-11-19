@@ -88,7 +88,6 @@ export default function DashboardPage() {
         </div>
         
         <div className="space-y-8">
-          <h1 className="text-white text-3xl font-bold">Email Generator</h1>
           <div className="bg-black/50 border border-white/10 backdrop-blur-lg rounded-xl p-6">
             <EmailGenerator 
               emailType={emailType} 

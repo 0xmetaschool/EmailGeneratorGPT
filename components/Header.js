@@ -16,7 +16,7 @@ export default function Header() {
       const res = await fetch('/api/auth/check');
       if (res.ok) {
         const data = await res.json();
-        setUser(data.user);
+        setUser(data.authenticated);
       } else {
         setUser(null);
       }
@@ -27,6 +27,8 @@ export default function Header() {
       setLoading(false);
     }
   };
+
+  console.log(user);
 
   useEffect(() => {
     checkAuth();
@@ -78,19 +80,13 @@ export default function Header() {
                     >
                       Dashboard
                     </Link>
-                    <Link 
-                      href="/history" 
-                      className="text-white/70 hover:text-white transition-all duration-300 hover:-translate-y-0.5"
-                    >
-                      History
-                    </Link>
                     <div className="flex items-center space-x-4">
                       <span className="text-white/70">{user.email}</span>
                       <button 
                         onClick={handleSignOut}
                         className="bg-white text-black px-4 py-2 rounded-xl hover:shadow-lg hover:shadow-white/20 transition-all duration-300 hover:-translate-y-0.5 font-medium"
                       >
-                        Sign Out
+                        Logout
                       </button>
                     </div>
                   </>
@@ -146,7 +142,7 @@ export default function Header() {
                         onClick={handleSignOut}
                         className="w-full bg-white text-black px-4 py-2 rounded-xl hover:shadow-lg hover:shadow-white/20 transition-all duration-300 font-medium"
                       >
-                        Sign Out
+                        Logout
                       </button>
                     </div>
                   </div>
