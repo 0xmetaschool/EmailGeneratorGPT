@@ -143,6 +143,7 @@ export default function EmailGenerator() {
   const [generatedEmail, setGeneratedEmail] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState('');
+  const [copySuccess, setCopySuccess] = useState(false);
 
   const generateEmailContent = async (targetWordCount) => {
     try {
@@ -197,6 +198,16 @@ export default function EmailGenerator() {
     window.open(`mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailContent)}`);
   };
 
+  const handleCopyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(generatedEmail.content);
+      setCopySuccess(true);
+      setTimeout(() => setCopySuccess(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy:', err);
+    }
+  };
+
   return (
     <div className="w-full max-w-7xl mx-auto">
       {/* Progress Indicator */}
@@ -240,7 +251,7 @@ export default function EmailGenerator() {
                   setFormData({ ...formData, type: type.id });
                   setStep(2);
                 }}
-                className={`group p-6 rounded-xl backdrop-blur-lg transition-all duration-300 hover:-translate-y-1 ${
+                className={`group p-6 rounded-xl backdrop-blur-lg transition-all duration-300 hover:-translate-y-1 active:scale-95 ${
                   formData.type === type.id 
                     ? 'bg-white/20 border-2 border-white'
                     : 'bg-white/5 border border-white/10 hover:border-white/50'
@@ -276,7 +287,7 @@ export default function EmailGenerator() {
                   setFormData({ ...formData, tone: tone.id });
                   setStep(3);
                 }}
-                className={`group p-6 rounded-xl backdrop-blur-lg transition-all duration-300 hover:-translate-y-1 ${
+                className={`group p-6 rounded-xl backdrop-blur-lg transition-all duration-300 hover:-translate-y-1 active:scale-95 ${
                   formData.tone === tone.id 
                     ? 'bg-white/20 border-2 border-white'
                     : 'bg-white/5 border border-white/10 hover:border-white/50'
@@ -360,7 +371,7 @@ export default function EmailGenerator() {
 
           <button
             onClick={() => setStep(4)}
-            className="w-full py-4 bg-white/20 text-white rounded-xl hover:shadow-lg hover:shadow-white/20 transition-all duration-300 hover:-translate-y-1"
+            className="w-full py-4 bg-white/20 text-white rounded-xl hover:shadow-lg hover:shadow-white/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:-translate-y-1 active:scale-95"
           >
             Continue
           </button>
@@ -402,7 +413,7 @@ export default function EmailGenerator() {
             <button
               onClick={handleGenerate}
               disabled={!formData.prompt.trim() || isGenerating}
-              className="w-full py-4 bg-white/20 text-white rounded-xl hover:shadow-lg hover:shadow-white/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:-translate-y-1"
+              className="w-full py-4 bg-white/20 text-white rounded-xl hover:shadow-lg hover:shadow-white/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:-translate-y-1 active:scale-95"
             >
               {isGenerating ? (
                 <div className="flex items-center justify-center gap-3">
@@ -453,22 +464,33 @@ export default function EmailGenerator() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <button
-              onClick={() => navigator.clipboard.writeText(generatedEmail.content)}
-              className="flex items-center justify-center gap-2 py-4 bg-white/5 text-white rounded-xl hover:bg-white/10 transition-all duration-300"
+              onClick={handleCopyToClipboard}
+              className={`flex items-center justify-center gap-2 py-4 bg-white/5 text-white rounded-xl hover:bg-white/10 transition-all duration-300 hover:-translate-y-1 active:scale-95 ${
+                copySuccess ? 'bg-green-500/20 text-green-200' : ''
+              }`}
             >
-              <Save className="w-5 h-5" />
-              Copy to Clipboard
+              {copySuccess ? (
+                <>
+                  <span className="animate-bounce">✓</span>
+                  Copied!
+                </>
+              ) : (
+                <>
+                  <Save className="w-5 h-5" />
+                  Copy to Clipboard
+                </>
+              )}
             </button>
             <button
               onClick={handlePreviewEmail}
-              className="flex items-center justify-center gap-2 py-4 bg-white/5 text-white rounded-xl hover:bg-white/10 transition-all duration-300"
+              className="flex items-center justify-center gap-2 py-4 bg-white/5 text-white rounded-xl hover:bg-white/10 transition-all duration-300 hover:-translate-y-1 active:scale-95"
             >
               <Mail className="w-5 h-5" />
               Open in Mail App
             </button>
             <button
               onClick={() => setStep(4)}
-              className="flex items-center justify-center gap-2 py-4 bg-white/20 text-white rounded-xl hover:shadow-lg hover:shadow-white/20 transition-all duration-300"
+              className="flex items-center justify-center gap-2 py-4 bg-white/20 text-white rounded-xl hover:shadow-lg hover:shadow-white/20 transition-all duration-300 hover:-translate-y-1 active:scale-95"
             >
               <Sparkles className="w-5 h-5" />
               Regenerate
