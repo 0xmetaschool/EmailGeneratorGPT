@@ -43,8 +43,8 @@ EmailGeneratorGPT is an intelligent email generation platform powered by OpenAI'
 
 **1. Clone the repository:**
 ```bash
-git clone https://github.com/yourusername/emailgeneratorgpt.git
-cd emailgeneratorgpt
+git clone https://github.com/0xmetaschool/EmailGeneratorGPT.git
+cd EmailGeneratorGPT
 ```
 
 **2. Install dependencies:**
