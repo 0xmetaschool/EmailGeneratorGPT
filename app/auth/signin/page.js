@@ -35,7 +35,10 @@ export default function SignInPage() {
       }
 
       window.dispatchEvent(new Event('auth-change'));
-      router.push('/dashboard');
+      console.log('Signed in successfully, routing to dashboard');
+      setTimeout(() => {
+        router.push('/dashboard');
+      }, 100);
     } catch (err) {
       console.error('Signin error:', err);
       setError(err.message || 'Failed to sign in');
