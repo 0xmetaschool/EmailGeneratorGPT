@@ -7,15 +7,15 @@ EmailGeneratorGPT is an intelligent email generation platform powered by OpenAI'
 
 ## Features
 
-- **AI-Powered Email Generation**: Utilize OpenAI's GPT for creating contextually appropriate emails
-- **Multiple Email Types**: Support for 9 different email categories including business, sales, personal, follow-up, and more
-- **Customizable Tones**: Choose from 9 unique tones to match your communication style
-- **Smart Length Control**: Flexible or custom word count options to fit your needs
-- **Email History**: Track and reuse your previously generated emails
-- **User Authentication**: Secure account system with email/password authentication
-- **Responsive Design**: Modern, clean interface that works on all devices
-- **Real-time Generation**: Quick, responsive email generation with loading states
-- **Copy & Share**: Easy options to copy emails or open in your default mail client
+- Utilize OpenAI's GPT for creating contextually appropriate emails
+- Support for 9 different email categories including business, sales, personal, follow-up, and more
+- Choose from 9 unique tones to match your communication style
+- Flexible or custom word count options to fit your needs
+- Track and reuse your previously generated emails
+- Secure account system with email/password authentication
+- Modern, clean interface that works on all devices
+- Quick, responsive email generation with loading states
+- Easy options to copy emails or open in your default mail client
 
 ## Technologies Used
 
