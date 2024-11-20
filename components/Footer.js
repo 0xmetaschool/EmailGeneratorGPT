@@ -9,7 +9,7 @@ const Footer = () => {
   useEffect(() => {
     const fetchStarCount = async () => {
       try {
-        const response = await fetch('https://api.github.com/repos/0xmetaschool/FlashCardGPT');
+        const response = await fetch('https://api.github.com/repos/0xmetaschool/EmailGeneratorGPT');
         const data = await response.json();
         setStarCount(data.stargazers_count); // Get the star count
       } catch (error) {
