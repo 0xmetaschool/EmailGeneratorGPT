@@ -69,9 +69,9 @@ npm run dev
 
 ## Screenshots
 
-![image](https://github.com/user-attachments/assets/bca9b859-78d2-461f-bdd8-33a4865fa9f0)
-![image](https://github.com/user-attachments/assets/e182c880-6aaf-4fd3-beb8-65f0934c1283)
-![image](https://github.com/user-attachments/assets/1ef2bdcb-b844-426d-9950-a607cbba897e)
+![image](https://github.com/user-attachments/assets/48fdbf7a-1cba-4d5d-8786-1e600dd1ac4c)
+![image](https://github.com/user-attachments/assets/536f2a59-82e2-4f18-808d-61b631d00601)
+![image](https://github.com/user-attachments/assets/dcf55b67-bbde-44ab-8601-b4e1126beb79)
 
 
 ## How to Use the Application
