@@ -34,7 +34,7 @@ const Footer = () => {
             </h3>
             <div className="flex items-center gap-4">
               <Link
-                href="https://github.com/0xmetaschool/FlashCardGPT/fork"
+                href="https://github.com/0xmetaschool/EmailGeneratorGPT/fork"
                 className="inline-flex items-center px-4 py-2 bg-white text-black rounded-md hover:shadow-lg hover:shadow-white/20 transition-all duration-300 hover:-translate-y-0.5 text-sm font-medium"
               >
                 Fork and Build Your Own
