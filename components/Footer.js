@@ -30,7 +30,7 @@ const Footer = () => {
               Free open source AI template
             </div>
             <h3 className="text-2xl font-bold mb-4 text-white">
-              Build your own Flash Card GPT
+              Build your own Email Generator GPT
             </h3>
             <div className="flex items-center gap-4">
               <Link
