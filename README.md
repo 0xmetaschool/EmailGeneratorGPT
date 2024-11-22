@@ -70,9 +70,13 @@ Open your browser and navigate to `http://localhost:3000`
 
 ## Screenshots
 
-![image](https://github.com/user-attachments/assets/48fdbf7a-1cba-4d5d-8786-1e600dd1ac4c)
-![image](https://github.com/user-attachments/assets/536f2a59-82e2-4f18-808d-61b631d00601)
-![image](https://github.com/user-attachments/assets/dcf55b67-bbde-44ab-8601-b4e1126beb79)
+<div style="display: flex; justify-content: space-between;">
+  <img src="https://github.com/0xmetaschool/EmailGeneratorGPT/blob/main/public/email-generator-gpt-template-landing-page.png?raw=true" alt="EmailGenerator GPT Template Landing Page screenshot" style="width: 49%; border: 2px solid black;" />
+  <img src="https://github.com/0xmetaschool/EmailGeneratorGPT/blob/main/public/email-generator-gpt-template-sign-up.png?raw=true" alt="EmailGenerator GPT Template Sign Up screenshot" style="width: 49%; border: 2px solid black;" />
+</div>
+<div style="display: flex; justify-content: space-between;">
+  <img src="https://github.com/0xmetaschool/EmailGeneratorGPT/blob/main/public/email-generator-gpt-template-home-page.png?raw=true" alt="EmailGenerator GPT Template Home Page screenshot" style="width: 49%; border: 2px solid black;" />
+</div>
 
 
 ## How to Use the Application
