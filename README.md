@@ -92,7 +92,7 @@ Contributions are welcome! Here's how you can help:
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/0xmetaschool/EmailGeneratorGPT/blob/main/LICENSE) file for details.
 
 ## Contact
 
