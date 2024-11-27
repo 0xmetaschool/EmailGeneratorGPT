@@ -5,19 +5,14 @@ EmailGeneratorGPT is an intelligent email generation platform powered by OpenAI'
 Built with Next.js and styled with Tailwind CSS, this application offers a seamless user experience with real-time email generation and customization options.
 
 ## Live Demo
-[https://emailgeneratorgpt.vercel.app/](https://magic-mail-six.vercel.app/)
+[https://emailgeneratorgpt.vercel.app/](https://email-generator-gpt.vercel.app/)
 
 ## Features
 
 - Utilize OpenAI's GPT for creating contextually appropriate emails
 - Support for 9 different email categories including business, sales, personal, follow-up, and more
-- Choose from 9 unique tones to match your communication style
 - Flexible or custom word count options to fit your needs
-- Track and reuse your previously generated emails
-- Secure account system with email/password authentication
-- Modern, clean interface that works on all devices
 - Quick, responsive email generation with loading states
-- Easy options to copy emails or open in your default mail client
 
 ## Technologies Used
 
@@ -32,11 +27,6 @@ Built with Next.js and styled with Tailwind CSS, this application offers a seaml
 
 - Professional business communication
 - Sales and marketing outreach
-- Personal correspondence
-- Follow-up emails after meetings
-- Job applications and cover letters
-- Customer support responses
-- Networking and introductions
 - Formal requests and proposals
 - Performance reviews and feedback
 
