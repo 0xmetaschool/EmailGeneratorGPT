@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { Mail, Sparkles, History, Save, ChevronRight, Book, Wand2, ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useEmailHistory } from '@/hooks/useEmailHistory';
 
 const EMAIL_TYPES = [
   {
@@ -129,9 +130,9 @@ const WORD_COUNT_PRESETS = [
   { value: 300, label: 'Detailed (~300 words)' },
   { value: 500, label: 'Long (~500 words)' }
 ];
-
 export default function EmailGenerator() {
   const router = useRouter();
+  const { addToHistory } = useEmailHistory();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     type: '',
@@ -177,6 +178,7 @@ export default function EmailGenerator() {
       throw new Error('Failed to generate email. Please try again.');
     }
   };
+
   const handleGenerate = async () => {
     setIsGenerating(true);
     setError('');
@@ -184,6 +186,16 @@ export default function EmailGenerator() {
       const targetWordCount = formData.lengthOption === 'custom' ? formData.wordCount : 200;
       const email = await generateEmailContent(targetWordCount);
       setGeneratedEmail(email);
+      
+      // Add to local storage history
+      addToHistory({
+        type: formData.type,
+        tone: formData.tone,
+        prompt: formData.prompt,
+        content: email.content,
+        wordCount: email.wordCount
+      });
+      
       setStep(5);
     } catch (error) {
       setError(error.message || 'Failed to generate email. Please try again.');
@@ -207,7 +219,6 @@ export default function EmailGenerator() {
       console.error('Failed to copy:', err);
     }
   };
-
   return (
     <div className="w-full max-w-7xl mx-auto">
       {/* Progress Indicator */}

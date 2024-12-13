@@ -1,114 +1,87 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 
 export function useEmailHistory() {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [userId, setUserId] = useState(null);
-  const router = useRouter();
 
-  // Check authentication
+  // Load history from localStorage on mount
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const res = await fetch('/api/auth/check');
-        if (!res.ok) {
-          router.push('/auth/signin');
-          return;
-        }
-        const data = await res.json();
-        setUserId(data.userId);
-      } catch (error) {
-        console.error('Auth check failed:', error);
-        router.push('/auth/signin');
-      }
-    };
-
-    checkAuth();
-  }, [router]);
-
-  // Fetch email history
-  const fetchHistory = async () => {
-    if (!userId) return;
-    
     try {
-      setLoading(true);
-      const response = await fetch('/api/emails');
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to fetch email history');
+      const savedHistory = localStorage.getItem('emailHistory');
+      if (savedHistory) {
+        setHistory(JSON.parse(savedHistory));
       }
-      const data = await response.json();
-      if (!Array.isArray(data)) {
-        throw new Error('Invalid response format from server');
-      }
-      console.log('Fetched email history:', data.length, 'emails');
-      setHistory(data);
     } catch (err) {
-      console.error('Error fetching email history:', err);
-      setError(err.message);
+      console.error('Error loading history:', err);
+      setError('Failed to load email history');
     } finally {
       setLoading(false);
+    }
+  }, []);
+
+  // Add new email to history
+  const addToHistory = (email) => {
+    try {
+      const newHistory = [{
+        id: Date.now(),
+        ...email,
+        timestamp: new Date().toISOString()
+      }, ...history].slice(0, 50); // Keep only last 50 emails
+
+      setHistory(newHistory);
+      localStorage.setItem('emailHistory', JSON.stringify(newHistory));
+    } catch (err) {
+      console.error('Error adding to history:', err);
+      setError('Failed to save email to history');
     }
   };
 
   // Delete an email from history
-  const deleteFromHistory = async (emailId) => {
-    if (!userId) return;
-    
+  const deleteFromHistory = (emailId) => {
     try {
-      const response = await fetch(`/api/emails?id=${emailId}`, {
-        method: 'DELETE',
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to delete email');
-      }
-      
-      // Update local state after successful deletion
-      setHistory(prevHistory => prevHistory.filter(email => email._id !== emailId));
+      const newHistory = history.filter(email => email.id !== emailId);
+      setHistory(newHistory);
+      localStorage.setItem('emailHistory', JSON.stringify(newHistory));
     } catch (err) {
       console.error('Error deleting email:', err);
-      setError(err.message);
+      setError('Failed to delete email');
     }
   };
 
   // Clear all history
-  const clearHistory = async () => {
-    if (!userId) return;
-    
+  const clearHistory = () => {
     try {
-      const response = await fetch('/api/emails/clear', {
-        method: 'DELETE',
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to clear history');
-      }
-      
       setHistory([]);
+      localStorage.removeItem('emailHistory');
     } catch (err) {
       console.error('Error clearing history:', err);
-      setError(err.message);
+      setError('Failed to clear history');
     }
   };
 
-  // Fetch history when userId changes
-  useEffect(() => {
-    if (userId) {
-      fetchHistory();
+  // Refresh history (re-load from localStorage)
+  const refreshHistory = () => {
+    try {
+      const savedHistory = localStorage.getItem('emailHistory');
+      if (savedHistory) {
+        setHistory(JSON.parse(savedHistory));
+      }
+    } catch (err) {
+      console.error('Error refreshing history:', err);
+      setError('Failed to refresh history');
     }
-  }, [userId]);
+  };
 
   return {
     history,
     loading,
     error,
+    addToHistory,
     deleteFromHistory,
     clearHistory,
-    refreshHistory: fetchHistory,
+    refreshHistory,
   };
 }

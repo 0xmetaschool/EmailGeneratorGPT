@@ -6,16 +6,11 @@ import { Clock, Trash2, Copy, ArrowLeft, RefreshCw, ChevronDown, ChevronUp, Filt
 import { useState, forwardRef, useImperativeHandle } from 'react';
 
 const EmailHistory = forwardRef(function EmailHistory(props, ref) {
-  const { history, deleteFromHistory, clearHistory, refreshHistory } = useEmailHistory();
+  const { history, deleteFromHistory, clearHistory } = useEmailHistory();
   const [filter, setFilter] = useState('all');
   const [timeRange, setTimeRange] = useState('7');
   const [expandedEmail, setExpandedEmail] = useState(null);
   const [showFilters, setShowFilters] = useState(false);
-
-  // Expose refreshHistory method via ref
-  useImperativeHandle(ref, () => ({
-    refreshHistory
-  }));
 
   const filteredHistory = history.filter(email => {
     const date = new Date(email.timestamp);
@@ -70,12 +65,6 @@ const EmailHistory = forwardRef(function EmailHistory(props, ref) {
             Filters
             {showFilters ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
           </button>
-          <button
-            onClick={refreshHistory}
-            className="p-2 text-white hover:bg-zinc-900 rounded-full transition-colors"
-          >
-            <RefreshCw className="w-5 h-5" />
-          </button>
         </div>
       </div>
 
@@ -112,14 +101,11 @@ const EmailHistory = forwardRef(function EmailHistory(props, ref) {
                   >
                     <option value="all">All Types</option>
                     <option value="business">Business</option>
-                    <option value="professional">Professional</option>
-                    <option value="casual">Casual</option>
-                    <option value="formal">Formal</option>
-                    <option value="friendly">Friendly</option>
+                    <option value="sales">Sales Pitch</option>
+                    <option value="personal">Personal</option>
                     <option value="follow-up">Follow-up</option>
-                    <option value="thank-you">Thank You</option>
-                    <option value="apology">Apology</option>
                     <option value="introduction">Introduction</option>
+                    <option value="support">Customer Support</option>
                   </select>
                 </div>
               </div>
@@ -139,13 +125,13 @@ const EmailHistory = forwardRef(function EmailHistory(props, ref) {
         ) : (
           filteredHistory.map((email) => (
             <motion.div
-              key={email._id}
+              key={email.id}
               layout
               className="bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden hover:border-zinc-700 transition-colors"
             >
               {/* Email Header */}
               <div
-                onClick={() => toggleEmail(email._id)}
+                onClick={() => toggleEmail(email.id)}
                 className="flex items-center justify-between p-4 cursor-pointer hover:bg-black/30 transition-colors"
               >
                 <div className="flex-1">
@@ -175,13 +161,13 @@ const EmailHistory = forwardRef(function EmailHistory(props, ref) {
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      deleteFromHistory(email._id);
+                      deleteFromHistory(email.id);
                     }}
                     className="p-1.5 text-white hover:bg-black/50 rounded-full transition-colors"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
-                  {expandedEmail === email._id ? (
+                  {expandedEmail === email.id ? (
                     <ChevronUp className="w-5 h-5 text-white" />
                   ) : (
                     <ChevronDown className="w-5 h-5 text-white" />
@@ -191,7 +177,7 @@ const EmailHistory = forwardRef(function EmailHistory(props, ref) {
 
               {/* Email Content */}
               <AnimatePresence>
-                {expandedEmail === email._id && (
+                {expandedEmail === email.id && (
                   <motion.div
                     initial={{ height: 0 }}
                     animate={{ height: 'auto' }}

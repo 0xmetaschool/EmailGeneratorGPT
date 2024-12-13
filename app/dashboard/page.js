@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
 import EmailGenerator from '@/components/email/EmailGenerator';
@@ -15,27 +15,7 @@ export default function DashboardPage() {
   const [generatedEmail, setGeneratedEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [userId, setUserId] = useState(null);
-  const { refreshHistory } = useEmailHistory();
-
-  useEffect(() => {
-    // Check if user is authenticated and get user ID
-    const checkAuth = async () => {
-      try {
-        const response = await fetch('/api/auth/check');
-        if (!response.ok) {
-          throw new Error('Not authenticated');
-        }
-        const data = await response.json();
-        setUserId(data.userId);
-      } catch (error) {
-        console.error('Auth check failed:', error);
-        router.push('/auth/signin');
-      }
-    };
-
-    checkAuth();
-  }, [router]);
+  const { addToHistory } = useEmailHistory();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -51,8 +31,7 @@ export default function DashboardPage() {
         body: JSON.stringify({
           type: emailType,
           tone: emailTone,
-          prompt: prompt,
-          userId: userId,
+          prompt: prompt
         }),
       });
 
@@ -63,10 +42,15 @@ export default function DashboardPage() {
       const data = await response.json();
       setGeneratedEmail(data.content);
       
-      // Wait a short moment for the database to update before refreshing
-      setTimeout(() => {
-        refreshHistory();
-      }, 500);
+      // Save to history
+      addToHistory({
+        type: emailType,
+        tone: emailTone,
+        prompt: prompt,
+        content: data.content,
+        wordCount: data.wordCount || 0
+      });
+      
     } catch (err) {
       setError(err.message);
     } finally {
