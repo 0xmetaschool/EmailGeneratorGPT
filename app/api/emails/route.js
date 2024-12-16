@@ -1,7 +1,4 @@
 import { NextResponse } from 'next/server';
-import { connectDB } from '@/lib/db';
-import Email from '@/models/Email';
-import { verifyToken } from '@/lib/auth';
 
 export async function GET(req) {
   try {
